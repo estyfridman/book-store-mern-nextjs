@@ -1,6 +1,6 @@
 //'use server';
 
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 let client: MongoClient;
 //let clientPromise: Promise<MongoClient>;
@@ -68,12 +68,17 @@ export async function getDocument(collection: string, document: object){
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function deleteDocument(collection: string, document: object){
-    connectDatabase();
-    const db = client.db('db01');
-    const documents = await db.collection(collection).deleteOne(document);
-    return documents;
-};
+export async function deleteDocument(client: any,
+    collection: string,
+    id: string
+  ) {
+    const db = client.db("db01");
+    const result = await db
+      .collection(collection)
+      .deleteOne({ _id: new ObjectId(id) });
+    return result;
+  }
+  
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateDocument(collection: string, filter: object, document: object){
